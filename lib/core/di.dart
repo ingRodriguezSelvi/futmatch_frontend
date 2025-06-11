@@ -1,0 +1,35 @@
+import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
+
+import '../features/auth/data/datasources/auth_remote_datasource.dart';
+import '../features/auth/data/repositories/auth_repository_impl.dart';
+import '../features/auth/domain/repositories/auth_repository.dart';
+import '../features/auth/domain/usecases/login_user.dart';
+import '../features/auth/ui/blocs/auth_bloc/auth_bloc.dart';
+import 'network/auth_api.dart';
+
+final sl = GetIt.instance;
+
+Future<void> init() async {
+  const baseUrl = 'https://api.futmatch.com';
+  // Http client
+  sl.registerLazySingleton<http.Client>(() => http.Client());
+  // DataSources
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+        () => AuthRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: baseUrl,
+    ),
+  );
+
+  // Repository
+  sl.registerLazySingleton<AuthRepository>(
+        () => AuthRepositoryImpl(sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => LoginUser(sl()));
+
+  // Blocs
+  sl.registerFactory(() => AuthBloc(loginUser: sl<LoginUser>()));
+}
