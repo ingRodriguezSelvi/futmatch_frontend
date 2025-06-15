@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/models/auth_tokens_model.dart';
+import '../../features/auth/data/models/login_response_model.dart';
 import '../../features/auth/data/models/user.dart';
 
 
@@ -16,7 +17,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   });
 
   @override
-  Future<UserModel> login(String email, String password) async {
+  Future<LoginResponseModel> login(String email, String password) async {
     final loginUrl = Uri.parse('$baseUrl/auth/login');
 
     final loginResponse = await client.post(
@@ -46,7 +47,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw Exception('Error al obtener usuario: ${userResponse.body}');
     }
 
-    return UserModel.fromJson(jsonDecode(userResponse.body));
+    final user = UserModel.fromJson(jsonDecode(userResponse.body));
+
+    return LoginResponseModel(user: user, tokens: tokens);
   }
 
   @override

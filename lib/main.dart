@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'core/di.dart' as di;
 import 'core/routes/routes.dart';
+import 'core/network/token_refresher.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  await di.sl<TokenRefresher>().start();
   runApp(const MyApp());
 }
 
