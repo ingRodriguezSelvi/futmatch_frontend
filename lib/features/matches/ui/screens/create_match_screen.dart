@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/styles/input_decoration.dart';
+import '../../../../core/widgets/date_picker_prw.dart';
 import '../blocs/matches_bloc/matches_bloc.dart';
 
-class CreateMatchScreen extends StatelessWidget {
+class CreateMatchScreen extends StatefulWidget {
   CreateMatchScreen({super.key});
 
+  @override
+  State<CreateMatchScreen> createState() => _CreateMatchScreenState();
+}
+
+class _CreateMatchScreenState extends State<CreateMatchScreen> {
   final _homeCtrl = TextEditingController();
   final _awayCtrl = TextEditingController();
   final _locationCtrl = TextEditingController();
-  final _dateCtrl = TextEditingController();
+  DateTime? _selectedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +54,12 @@ class CreateMatchScreen extends StatelessWidget {
                   decoration: customInputDecoration('Ubicación'),
                 ),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: _dateCtrl,
-                  decoration: customInputDecoration('Fecha (YYYY-MM-DD HH:MM)'),
+                DatePickerPrw(
+                  labelText: 'Fecha',
+                  hintText: 'Selecciona la fecha',
+                  showTime: true,
+                  onChanged: (d) => _selectedDate = d,
+                  validator: (_) => null,
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -61,7 +71,7 @@ class CreateMatchScreen extends StatelessWidget {
                                   'homeTeam': _homeCtrl.text,
                                   'awayTeam': _awayCtrl.text,
                                   'location': _locationCtrl.text,
-                                  'date': _dateCtrl.text,
+                                  'date': _selectedDate?.toIso8601String() ?? '',
                                 }),
                               );
                         },
