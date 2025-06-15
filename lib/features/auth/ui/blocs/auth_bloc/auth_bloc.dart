@@ -1,10 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 
+import '../../../../../core/di.dart';
+import '../../../../../core/network/token_refresher.dart';
 import '../../../domain/entities/user.dart';
 import '../../../domain/usecases/login_user.dart';
-import '../../../../core/di.dart';
-import '../../../../core/network/token_refresher.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

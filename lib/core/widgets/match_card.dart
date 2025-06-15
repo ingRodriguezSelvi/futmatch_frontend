@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../features/matches/domain/entities/match.dart';
+
 class MatchCard extends StatelessWidget {
-  const MatchCard({super.key});
+  final Match? match;
+  final VoidCallback? onDetails;
+
+  const MatchCard({super.key, this.match, this.onDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +26,20 @@ class MatchCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Equipo A vs Equipo B',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          Text(
+            match != null
+                ? '${match!.homeTeam} vs ${match!.awayTeam}'
+                : 'Equipo A vs Equipo B',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 4),
-          const Text('30 may 2025 - 6.00 p.m.'),
+          Text(match != null ? match!.date.toString() : '30 may 2025 - 6.00 p.m.'),
           const SizedBox(height: 4),
-          const Text(
-            'Ubicacion: Canchas San Vicente',
-            style: TextStyle(color: Colors.grey),
+          Text(
+            match != null
+                ? 'Ubicacion: ${match!.location}'
+                : 'Ubicacion: Canchas San Vicente',
+            style: const TextStyle(color: Colors.grey),
           ),
           const SizedBox(height: 12),
           Row(
@@ -45,7 +54,7 @@ class MatchCard extends StatelessWidget {
                 ],
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: onDetails,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
