@@ -127,9 +127,10 @@ class LoginScreen extends StatelessWidget {
                                     ? null
                                     : () {
                                   context.read<AuthBloc>().add(
-                                    LoginRequested(
+                                  LoginRequested(
                                       _emailCtrl.text,
                                       _pwdCtrl.text,
+                                      _rememberMe.value,
                                     ),
                                   );
                                 },

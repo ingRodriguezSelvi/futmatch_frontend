@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 import '../features/auth/data/datasources/auth_remote_datasource.dart';
+import '../features/auth/data/datasources/auth_local_datasource.dart';
 import '../features/auth/data/repositories/auth_repository_impl.dart';
 import '../features/auth/domain/repositories/auth_repository.dart';
 import '../features/auth/domain/usecases/login_user.dart';
@@ -16,6 +17,7 @@ import '../features/matches/domain/usecases/join_match.dart';
 import '../features/matches/domain/usecases/cancel_participation.dart';
 import '../features/matches/domain/usecases/update_match_result.dart';
 import '../features/matches/ui/blocs/matches_bloc/matches_bloc.dart';
+import 'network/token_refresher.dart';
 
 final sl = GetIt.instance;
 
@@ -36,10 +38,16 @@ Future<void> init() async {
       baseUrl: baseUrl,
     ),
   );
+  sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource());
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
-        () => AuthRepositoryImpl(sl()),
+        () => AuthRepositoryImpl(sl(), sl()),
+  );
+
+  // Token refresher
+  sl.registerLazySingleton(
+        () => TokenRefresher(repository: sl<AuthRepository>(), localDataSource: sl<AuthLocalDataSource>()),
   );
   sl.registerLazySingleton<MatchesRepository>(
       () => MatchesRepositoryImpl(sl()),
