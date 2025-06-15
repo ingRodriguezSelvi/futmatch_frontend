@@ -18,6 +18,9 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
   final CancelParticipation cancelParticipation;
   final UpdateMatchResult updateMatchResult;
 
+  final List<Match> _matches = [];
+  List<Match> get matches => List.unmodifiable(_matches);
+
   MatchesBloc({
     required this.createMatch,
     required this.getMatchDetails,
@@ -25,11 +28,17 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
     required this.cancelParticipation,
     required this.updateMatchResult,
   }) : super(MatchesInitial()) {
+    on<LoadMatchesRequested>((event, emit) {
+      emit(MatchesListLoaded(List.unmodifiable(_matches)));
+    });
+
     on<CreateMatchRequested>((event, emit) async {
       emit(MatchesLoading());
       try {
         final match = await createMatch(event.request);
+        _matches.add(match);
         emit(MatchLoaded(match));
+        emit(MatchesListLoaded(List.unmodifiable(_matches)));
       } catch (e) {
         emit(MatchesError(e.toString()));
       }
@@ -39,7 +48,14 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
       emit(MatchesLoading());
       try {
         final match = await getMatchDetails(event.matchId);
+        final index = _matches.indexWhere((m) => m.id == match.id);
+        if (index == -1) {
+          _matches.add(match);
+        } else {
+          _matches[index] = match;
+        }
         emit(MatchLoaded(match));
+        emit(MatchesListLoaded(List.unmodifiable(_matches)));
       } catch (e) {
         emit(MatchesError(e.toString()));
       }
@@ -49,7 +65,12 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
       emit(MatchesLoading());
       try {
         final match = await joinMatch(event.matchId, event.request);
+        final index = _matches.indexWhere((m) => m.id == match.id);
+        if (index != -1) {
+          _matches[index] = match;
+        }
         emit(MatchLoaded(match));
+        emit(MatchesListLoaded(List.unmodifiable(_matches)));
       } catch (e) {
         emit(MatchesError(e.toString()));
       }
@@ -59,7 +80,12 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
       emit(MatchesLoading());
       try {
         final match = await cancelParticipation(event.matchId, event.request);
+        final index = _matches.indexWhere((m) => m.id == match.id);
+        if (index != -1) {
+          _matches[index] = match;
+        }
         emit(MatchLoaded(match));
+        emit(MatchesListLoaded(List.unmodifiable(_matches)));
       } catch (e) {
         emit(MatchesError(e.toString()));
       }
@@ -69,7 +95,12 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
       emit(MatchesLoading());
       try {
         final match = await updateMatchResult(event.matchId, event.request);
+        final index = _matches.indexWhere((m) => m.id == match.id);
+        if (index != -1) {
+          _matches[index] = match;
+        }
         emit(MatchLoaded(match));
+        emit(MatchesListLoaded(List.unmodifiable(_matches)));
       } catch (e) {
         emit(MatchesError(e.toString()));
       }

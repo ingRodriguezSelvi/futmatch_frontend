@@ -27,6 +27,8 @@ class CancelParticipationRequested extends MatchesEvent {
   CancelParticipationRequested(this.matchId, this.request);
 }
 
+class LoadMatchesRequested extends MatchesEvent {}
+
 class UpdateResultRequested extends MatchesEvent {
   final String matchId;
   final Map<String, dynamic> request;

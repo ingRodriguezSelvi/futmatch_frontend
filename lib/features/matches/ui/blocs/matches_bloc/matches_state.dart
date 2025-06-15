@@ -24,3 +24,11 @@ class MatchLoaded extends MatchesState {
   @override
   List<Object?> get props => [match];
 }
+
+class MatchesListLoaded extends MatchesState {
+  final List<Match> matches;
+  MatchesListLoaded(this.matches);
+
+  @override
+  List<Object?> get props => [matches];
+}

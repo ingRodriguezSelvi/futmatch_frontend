@@ -14,7 +14,7 @@ class MatchesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<MatchesBloc>(),
+      create: (_) => sl<MatchesBloc>()..add(LoadMatchesRequested()),
       child: Builder(
         builder: (context) => Scaffold(
           backgroundColor: Colors.blue,
@@ -45,55 +45,68 @@ class MatchesScreen extends StatelessWidget {
                     ),
                   ),
                   padding: const EdgeInsets.all(16),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: BlocBuilder<MatchesBloc, MatchesState>(
+                    builder: (context, state) {
+                      final matches = context.read<MatchesBloc>().matches;
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SectionTitle('Próximos partidos'),
-                            IconButton(
-                              icon: const Icon(Icons.add_circle_outline,
-                                  color: Colors.blue, size: 28),
-                              onPressed: () async {
-                                final bloc = context.read<MatchesBloc>();
-                                final match = await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => BlocProvider.value(
-                                      value: bloc,
-                                      child: CreateMatchScreen(),
-                                    ),
-                                  ),
-                                );
-                                if (match != null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Partido creado'),
-                                    ),
-                                  );
-                                }
-                              },
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const SectionTitle('Próximos partidos'),
+                                IconButton(
+                                  icon: const Icon(Icons.add_circle_outline,
+                                      color: Colors.blue, size: 28),
+                                  onPressed: () async {
+                                    final bloc = context.read<MatchesBloc>();
+                                    final match = await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => BlocProvider.value(
+                                          value: bloc,
+                                          child: CreateMatchScreen(),
+                                        ),
+                                      ),
+                                    );
+                                    if (match != null) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Partido creado'),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
-                                  value: context.read<MatchesBloc>(),
-                                  child: const MatchDetailsScreen(matchId: '1'),
+                            const SizedBox(height: 12),
+                            if (matches.isEmpty)
+                              const Text('No hay partidos')
+                            else
+                              ...matches.map(
+                                (m) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: MatchCard(
+                                    match: m,
+                                    onDetails: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => BlocProvider.value(
+                                            value: context.read<MatchesBloc>(),
+                                            child: MatchDetailsScreen(matchId: m.id),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                            );
-                          },
-                          child: const MatchCard(),
+                            const SizedBox(height: 32),
+                          ],
                         ),
-                        const SizedBox(height: 32),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
