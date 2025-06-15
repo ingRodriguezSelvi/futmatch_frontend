@@ -11,7 +11,7 @@ import 'network/auth_api.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  const baseUrl = 'https://api.futmatch.com';
+  const baseUrl = 'https://futmatch-api.onrender.com';
   // Http client
   sl.registerLazySingleton<http.Client>(() => http.Client());
   // DataSources

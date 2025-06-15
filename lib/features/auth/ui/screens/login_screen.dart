@@ -79,6 +79,8 @@ class LoginScreen extends StatelessWidget {
                             controller: _emailCtrl,
                             keyboardType: TextInputType.emailAddress,
                             decoration: customInputDecoration('Correo electrónico'),
+                            //Disable auto-correct
+                            autocorrect: false,
                           ),
                           const SizedBox(height: 16),
                           TextField(
