@@ -24,7 +24,9 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
   DateTime? _selectedDay;
 
   bool _isDayEnabled(DateTime day) {
-    if (!widget.allowPastDates && day.isBefore(DateTime.now())) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    if (!widget.allowPastDates && day.isBefore(today)) {
       return false;
     }
     if (widget.availableDays == null) return true;

@@ -89,12 +89,16 @@ class _DatePickerPrwState extends State<DatePickerPrw> {
         availableDays: widget.availableDays,
         allowPastDates: widget.allowPastDates,
         onDateSelected: (selectedDate) async {
-          if (!widget.allowPastDates && selectedDate.isBefore(DateTime.now())) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('No se puede seleccionar una fecha pasada')),
-            );
-            return;
+          if (!widget.allowPastDates) {
+            final now = DateTime.now();
+            final today = DateTime(now.year, now.month, now.day);
+            if (selectedDate.isBefore(today)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('No se puede seleccionar una fecha pasada')),
+              );
+              return;
+            }
           }
 
           if (widget.showTime && widget.availableDays != null) {
