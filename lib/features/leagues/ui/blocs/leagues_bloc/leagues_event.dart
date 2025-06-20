@@ -11,3 +11,10 @@ class JoinLeagueRequested extends LeaguesEvent {
   final String leagueId;
   JoinLeagueRequested(this.leagueId);
 }
+
+class LoadLeaguesRequested extends LeaguesEvent {}
+
+class SelectLeagueRequested extends LeaguesEvent {
+  final League league;
+  SelectLeagueRequested(this.league);
+}

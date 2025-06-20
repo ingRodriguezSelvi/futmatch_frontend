@@ -97,6 +97,7 @@ Future<void> init() async {
   sl.registerFactory(() => LeaguesBloc(
         createLeague: sl<CreateLeague>(),
         joinLeague: sl<JoinLeague>(),
+        getLeaguesForUser: sl<GetLeaguesForUser>(),
         localDataSource: sl<AuthLocalDataSource>(),
       ));
 }
