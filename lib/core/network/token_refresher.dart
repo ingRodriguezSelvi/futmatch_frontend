@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
-import '../../features/auth/data/models/auth_tokens_model.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 
 class TokenRefresher {
@@ -17,10 +16,7 @@ class TokenRefresher {
       final tokens = await localDataSource.getTokens();
       if (tokens == null) return;
       try {
-        final newAccess = await repository.refreshToken(tokens.refreshToken);
-        await localDataSource.saveTokens(
-          AuthTokensModel(accessToken: newAccess, refreshToken: tokens.refreshToken),
-        );
+        await repository.refreshToken(tokens.refreshToken);
       } catch (_) {}
     });
   }
