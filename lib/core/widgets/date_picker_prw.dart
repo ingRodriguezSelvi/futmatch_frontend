@@ -82,77 +82,77 @@ class _DatePickerPrwState extends State<DatePickerPrw> {
   }
 
   Future<void> _openDatePicker(BuildContext context) async {
-    await showModalBottomSheet(
+    final selectedDate = await showModalBottomSheet<DateTime>(
       context: context,
       isScrollControlled: true,
       builder: (_) => CalendarBottomSheet(
         availableDays: widget.availableDays,
         allowPastDates: widget.allowPastDates,
-        onDateSelected: (selectedDate) async {
-          if (!widget.allowPastDates) {
-            final now = DateTime.now();
-            final today = DateTime(now.year, now.month, now.day);
-            if (selectedDate.isBefore(today)) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('No se puede seleccionar una fecha pasada')),
-              );
-              return;
-            }
-          }
-
-          if (widget.showTime && widget.availableDays != null) {
-            final hours = DatePickerHelper.getAvailableHours(
-              selectedDate,
-              widget.availableDays!,
-            );
-
-            if (hours.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('No hay horas disponibles para esta fecha')),
-              );
-              return;
-            }
-
-            await showModalBottomSheet(
-              context: context,
-              builder: (_) => HourPickerBottomSheet(
-                availableHours: hours,
-                onHourSelected: (hour) {
-                  final finalDate = DateTime(
-                    selectedDate.year,
-                    selectedDate.month,
-                    selectedDate.day,
-                    hour,
-                  );
-                  _setDate(finalDate);
-                },
-              ),
-            );
-          } else if (widget.showTime && widget.availableDays == null) {
-            // allow selecting hour from 0-23
-            await showModalBottomSheet(
-              context: context,
-              builder: (_) => HourPickerBottomSheet(
-                availableHours: List.generate(24, (index) => index),
-                onHourSelected: (hour) {
-                  final finalDate = DateTime(
-                    selectedDate.year,
-                    selectedDate.month,
-                    selectedDate.day,
-                    hour,
-                  );
-                  _setDate(finalDate);
-                },
-              ),
-            );
-          } else {
-            _setDate(selectedDate);
-          }
-        },
       ),
     );
+
+    if (selectedDate == null) return;
+
+    if (!widget.allowPastDates) {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      if (selectedDate.isBefore(today)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('No se puede seleccionar una fecha pasada')),
+        );
+        return;
+      }
+    }
+
+    if (widget.showTime && widget.availableDays != null) {
+      final hours = DatePickerHelper.getAvailableHours(
+        selectedDate,
+        widget.availableDays!,
+      );
+
+      if (hours.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('No hay horas disponibles para esta fecha')),
+        );
+        return;
+      }
+
+      await showModalBottomSheet(
+        context: context,
+        builder: (_) => HourPickerBottomSheet(
+          availableHours: hours,
+          onHourSelected: (hour) {
+            final finalDate = DateTime(
+              selectedDate.year,
+              selectedDate.month,
+              selectedDate.day,
+              hour,
+            );
+            _setDate(finalDate);
+          },
+        ),
+      );
+    } else if (widget.showTime && widget.availableDays == null) {
+      await showModalBottomSheet(
+        context: context,
+        builder: (_) => HourPickerBottomSheet(
+          availableHours: List.generate(24, (index) => index),
+          onHourSelected: (hour) {
+            final finalDate = DateTime(
+              selectedDate.year,
+              selectedDate.month,
+              selectedDate.day,
+              hour,
+            );
+            _setDate(finalDate);
+          },
+        ),
+      );
+    } else {
+      _setDate(selectedDate);
+    }
   }
 
   void _setDate(DateTime date) {
