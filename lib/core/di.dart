@@ -8,6 +8,11 @@ import '../features/auth/domain/repositories/auth_repository.dart';
 import '../features/auth/domain/usecases/login_user.dart';
 import '../features/auth/ui/blocs/auth_bloc/auth_bloc.dart';
 import 'network/auth_api.dart';
+import '../features/leagues/data/datasources/leagues_remote_datasource.dart';
+import '../features/leagues/data/repositories/leagues_repository_impl.dart';
+import '../features/leagues/domain/repositories/leagues_repository.dart';
+import '../features/leagues/domain/usecases/get_leagues_for_user.dart';
+import '../features/app_context/ui/blocs/app_context_bloc/app_context_bloc.dart';
 import '../features/matches/data/datasources/matches_remote_datasource.dart';
 import '../features/matches/data/repositories/matches_repository_impl.dart';
 import '../features/matches/domain/repositories/matches_repository.dart';
@@ -38,6 +43,12 @@ Future<void> init() async {
       baseUrl: baseUrl,
     ),
   );
+  sl.registerLazySingleton<LeaguesRemoteDataSource>(
+    () => LeaguesRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: baseUrl,
+    ),
+  );
   sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource());
 
   // Repository
@@ -52,6 +63,9 @@ Future<void> init() async {
   sl.registerLazySingleton<MatchesRepository>(
       () => MatchesRepositoryImpl(sl()),
   );
+  sl.registerLazySingleton<LeaguesRepository>(
+      () => LeaguesRepositoryImpl(sl()),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => LoginUser(sl()));
@@ -60,6 +74,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => JoinMatch(sl()));
   sl.registerLazySingleton(() => CancelParticipation(sl()));
   sl.registerLazySingleton(() => UpdateMatchResult(sl()));
+  sl.registerLazySingleton(() => GetLeaguesForUser(sl()));
 
   // Blocs
   sl.registerFactory(() => AuthBloc(loginUser: sl<LoginUser>()));
@@ -69,5 +84,9 @@ Future<void> init() async {
         joinMatch: sl<JoinMatch>(),
         cancelParticipation: sl<CancelParticipation>(),
         updateMatchResult: sl<UpdateMatchResult>(),
+      ));
+  sl.registerFactory(() => AppContextBloc(
+        localDataSource: sl<AuthLocalDataSource>(),
+        getLeaguesForUser: sl<GetLeaguesForUser>(),
       ));
 }

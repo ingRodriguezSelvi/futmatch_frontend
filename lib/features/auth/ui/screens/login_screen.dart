@@ -36,7 +36,7 @@ class LoginScreen extends StatelessWidget {
 
               if (state is Authenticated) {
                 // Navega al home
-                Navigator.of(context).pushReplacementNamed('/home');
+                Navigator.of(context).pushReplacementNamed('/');
               }
             },
             child: SafeArea(
