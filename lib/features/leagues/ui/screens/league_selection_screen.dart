@@ -5,7 +5,7 @@ import '../../../../core/di.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/input_decoration.dart';
 import '../../../../core/widgets/fut_button.dart';
-import '../../../leagues/ui/blocs/leagues_bloc/leagues_bloc.dart';
+import '../blocs/leagues_bloc/leagues_bloc.dart';
 
 class LeagueSelectionScreen extends StatelessWidget {
   const LeagueSelectionScreen({super.key});

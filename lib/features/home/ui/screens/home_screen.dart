@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:futmatch_frontend/features/leagues/ui/screens/league_selection_screen.dart';
 
+import '../../../leagues/domain/entities/league.dart';
 import '../../../leagues/ui/blocs/leagues_bloc/leagues_bloc.dart';
-import '../../../leagues/ui/screens/create_league_screen.dart';
 import '../../../../core/widgets/history_card.dart';
 import '../../../../core/widgets/match_card.dart';
 import '../../../../core/widgets/new_card.dart';
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state) {
                 final bloc = context.read<LeaguesBloc>();
                 final leagues = bloc.leagues;
-                final name = bloc.selectedLeague?.name ?? 'Liga FutMatch';
+                final name = bloc.selectedLeague?.name ?? 'FutMatch';
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -69,13 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
             automaticallyImplyLeading: false,
             actions: [
               IconButton(
-                icon: const Icon(Icons.add),
+                icon: const Icon(Icons.add, color: Colors.white),
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => BlocProvider.value(
                         value: context.read<LeaguesBloc>(),
-                        child: const CreateLeagueScreen(),
+                        child: const LeagueSelectionScreen(),
                       ),
                     ),
                   );

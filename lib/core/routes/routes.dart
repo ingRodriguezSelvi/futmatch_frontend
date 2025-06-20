@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:futmatch_frontend/core/widgets/main_navbar.dart';
 
 import '../../features/app_context/ui/screens/splash_screen.dart';
-import '../../features/app_context/ui/screens/league_selection_screen.dart';
+import '../../features/leagues/ui/screens/league_selection_screen.dart';
 import '../../features/auth/ui/screens/login_screen.dart';
 import '../../features/leagues/ui/screens/create_league_screen.dart';
 
