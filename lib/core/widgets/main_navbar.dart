@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:futmatch_frontend/features/matches/ui/matches_screen.dart';
+import 'package:futmatch_frontend/features/matches/ui/screens/matches_screen.dart';
 
 import '../../features/home/ui/screens/home_screen.dart';
 

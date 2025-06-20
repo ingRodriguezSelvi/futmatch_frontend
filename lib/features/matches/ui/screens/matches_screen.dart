@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/widgets/match_card.dart';
-import '../../../core/widgets/section_title.dart';
+import '../../../../core/widgets/match_card.dart';
+import '../../../../core/widgets/section_title.dart';
 import 'package:futmatch_frontend/core/di.dart';
-import 'blocs/matches_bloc/matches_bloc.dart';
-import 'screens/create_match_screen.dart';
-import 'screens/match_details_screen.dart';
+import '../blocs/matches_bloc/matches_bloc.dart';
+import 'create_match_screen.dart';
+import 'match_details_screen.dart';
 
 class MatchesScreen extends StatelessWidget {
   const MatchesScreen({super.key});

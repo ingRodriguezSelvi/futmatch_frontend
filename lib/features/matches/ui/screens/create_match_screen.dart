@@ -21,66 +21,97 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Crear Partido')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: BlocConsumer<MatchesBloc, MatchesState>(
-          listener: (context, state) {
-            if (state is MatchesError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-            }
-            if (state is MatchLoaded) {
-              Navigator.of(context).pop(state.match);
-            }
-          },
-          builder: (context, state) {
-            final loading = state is MatchesLoading;
-            return Column(
-              children: [
-                TextField(
-                  controller: _homeCtrl,
-                  decoration: customInputDecoration('Equipo local'),
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          AppBar(
+            backgroundColor: Colors.blue,
+            elevation: 0,
+            title: const Text(
+              'Liga FutMatch',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+          ),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(28),
+                  topRight: Radius.circular(28),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _awayCtrl,
-                  decoration: customInputDecoration('Equipo visitante'),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _locationCtrl,
-                  decoration: customInputDecoration('Ubicación'),
-                ),
-                const SizedBox(height: 12),
-                DatePickerPrw(
-                  labelText: 'Fecha',
-                  hintText: 'Selecciona la fecha',
-                  showTime: true,
-                  onChanged: (d) => _selectedDate = d,
-                  validator: (_) => null,
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: loading
-                      ? null
-                      : () {
-                          context.read<MatchesBloc>().add(
-                                CreateMatchRequested({
-                                  'homeTeam': _homeCtrl.text,
-                                  'awayTeam': _awayCtrl.text,
-                                  'location': _locationCtrl.text,
-                                  'date': _selectedDate?.toIso8601String() ?? '',
-                                }),
-                              );
-                        },
-                  child: Text(loading ? 'Creando...' : 'Crear'),
-                ),
-              ],
-            );
-          },
-        ),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: BlocConsumer<MatchesBloc, MatchesState>(
+                listener: (context, state) {
+                  if (state is MatchesError) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
+                  }
+                  if (state is MatchLoaded) {
+                    Navigator.of(context).pop(state.match);
+                  }
+                },
+                builder: (context, state) {
+                  final loading = state is MatchesLoading;
+                  return Column(
+                    children: [
+                      TextField(
+                        controller: _homeCtrl,
+                        decoration: customInputDecoration('Equipo local'),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _awayCtrl,
+                        decoration: customInputDecoration('Equipo visitante'),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _locationCtrl,
+                        decoration: customInputDecoration('Ubicación'),
+                      ),
+                      const SizedBox(height: 12),
+                      DatePickerPrw(
+                        labelText: 'Fecha',
+                        hintText: 'Selecciona la fecha',
+                        showTime: true,
+                        onChanged: (d) => _selectedDate = d,
+                        validator: (_) => null,
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed:
+                            loading
+                                ? null
+                                : () {
+                                  context.read<MatchesBloc>().add(
+                                    CreateMatchRequested({
+                                      'homeTeam': _homeCtrl.text,
+                                      'awayTeam': _awayCtrl.text,
+                                      'location': _locationCtrl.text,
+                                      'date':
+                                          _selectedDate?.toIso8601String() ??
+                                          '',
+                                    }),
+                                  );
+                                },
+                        child: Text(loading ? 'Creando...' : 'Crear'),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
