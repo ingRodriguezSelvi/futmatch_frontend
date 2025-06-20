@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../styles/app_colors.dart';
 
 class CircleLogo extends StatelessWidget {
   final double size;
@@ -14,7 +15,7 @@ class CircleLogo extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        color: Color(0xFFF5F7FC),
+        color: AppColors.inputFill,
       ),
       child: Image.asset(assetPath),
     );

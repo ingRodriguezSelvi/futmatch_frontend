@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
 
 InputDecoration customInputDecoration(String placeholder) {
   return InputDecoration(
     hintText: placeholder,
     filled: true,
-    fillColor: const Color(0xFFF5F7FC),
+    fillColor: AppColors.inputFill,
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
@@ -12,3 +13,4 @@ InputDecoration customInputDecoration(String placeholder) {
     ),
   );
 }
+
