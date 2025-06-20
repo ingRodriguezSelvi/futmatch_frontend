@@ -10,4 +10,14 @@ class LeaguesRepositoryImpl implements LeaguesRepository {
   @override
   Future<List<League>> getLeaguesForUser(String userId, String token) =>
       remoteDataSource.getLeaguesForUser(userId, token);
+
+  @override
+  Future<League> createLeague(
+          Map<String, dynamic> request, String token) =>
+      remoteDataSource.createLeague(request, token);
+
+  @override
+  Future<League> joinLeague(
+          String leagueId, Map<String, dynamic> request, String token) =>
+      remoteDataSource.joinLeague(leagueId, request, token);
 }
