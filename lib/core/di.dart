@@ -12,6 +12,9 @@ import '../features/leagues/data/datasources/leagues_remote_datasource.dart';
 import '../features/leagues/data/repositories/leagues_repository_impl.dart';
 import '../features/leagues/domain/repositories/leagues_repository.dart';
 import '../features/leagues/domain/usecases/get_leagues_for_user.dart';
+import '../features/leagues/domain/usecases/create_league.dart';
+import '../features/leagues/domain/usecases/join_league.dart';
+import '../features/leagues/ui/blocs/leagues_bloc/leagues_bloc.dart';
 import '../features/app_context/ui/blocs/app_context_bloc/app_context_bloc.dart';
 import '../features/matches/data/datasources/matches_remote_datasource.dart';
 import '../features/matches/data/repositories/matches_repository_impl.dart';
@@ -75,6 +78,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => CancelParticipation(sl()));
   sl.registerLazySingleton(() => UpdateMatchResult(sl()));
   sl.registerLazySingleton(() => GetLeaguesForUser(sl()));
+  sl.registerLazySingleton(() => CreateLeague(sl()));
+  sl.registerLazySingleton(() => JoinLeague(sl()));
 
   // Blocs
   sl.registerFactory(() => AuthBloc(loginUser: sl<LoginUser>()));
@@ -88,5 +93,10 @@ Future<void> init() async {
   sl.registerFactory(() => AppContextBloc(
         localDataSource: sl<AuthLocalDataSource>(),
         getLeaguesForUser: sl<GetLeaguesForUser>(),
+      ));
+  sl.registerFactory(() => LeaguesBloc(
+        createLeague: sl<CreateLeague>(),
+        joinLeague: sl<JoinLeague>(),
+        localDataSource: sl<AuthLocalDataSource>(),
       ));
 }
