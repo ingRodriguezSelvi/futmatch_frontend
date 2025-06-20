@@ -8,7 +8,9 @@ import '../../../../core/widgets/fut_button.dart';
 import '../blocs/leagues_bloc/leagues_bloc.dart';
 
 class LeagueSelectionScreen extends StatelessWidget {
-  const LeagueSelectionScreen({super.key});
+  final bool showBackButton;
+
+  const LeagueSelectionScreen({super.key, this.showBackButton = false});
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,14 @@ class LeagueSelectionScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        if (showBackButton)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              icon: const Icon(Icons.arrow_back),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ),
                         const Icon(Icons.sports_soccer, size: 48, color: Colors.blue),
                         const SizedBox(height: 16),
                         const Text(
