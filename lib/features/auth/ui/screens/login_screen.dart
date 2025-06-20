@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:futmatch_frontend/core/di.dart';
+import 'package:futmatch_frontend/core/styles/app_colors.dart';
 import 'package:futmatch_frontend/core/styles/input_decoration.dart';
 import 'package:futmatch_frontend/core/widgets/circle_logo.dart';
 import 'package:futmatch_frontend/core/widgets/gradient_button.dart';
@@ -19,7 +20,7 @@ class LoginScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6FA),
+      backgroundColor: AppColors.background,
       body: BlocProvider(
         create: (_) => sl<AuthBloc>(),
         child: Builder(

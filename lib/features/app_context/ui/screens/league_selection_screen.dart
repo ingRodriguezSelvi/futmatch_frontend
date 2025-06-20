@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di.dart';
+import '../../../../core/styles/app_colors.dart';
+import '../../../../core/styles/input_decoration.dart';
+import '../../../../core/widgets/fut_button.dart';
 import '../../../leagues/ui/blocs/leagues_bloc/leagues_bloc.dart';
 
 class LeagueSelectionScreen extends StatelessWidget {
@@ -12,9 +15,6 @@ class LeagueSelectionScreen extends StatelessWidget {
     final codeCtrl = TextEditingController();
     final nameCtrl = TextEditingController();
 
-    final primaryColor = Colors.blue;
-    final accentColor = const Color(0xFF26EC77);
-    final backgroundColor = const Color(0xFFF4F6FA);
 
     return BlocProvider(
       create: (_) => sl<LeaguesBloc>(),
@@ -32,7 +32,7 @@ class LeagueSelectionScreen extends StatelessWidget {
           final loading = state is LeaguesLoading;
 
           return Scaffold(
-            backgroundColor: backgroundColor,
+            backgroundColor: AppColors.background,
             body: SafeArea(
               child: Center(
                 child: SingleChildScrollView(
@@ -79,33 +79,19 @@ class LeagueSelectionScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         TextField(
                           controller: nameCtrl,
-                          decoration: InputDecoration(
-                            hintText: 'Nombre de la liga',
-                            filled: true,
-                            fillColor: const Color(0xFFF4F6FA),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          decoration:
+                              customInputDecoration('Nombre de la liga'),
                         ),
                         const SizedBox(height: 16),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor,
-                            minimumSize: const Size.fromHeight(48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          onPressed: loading
-                              ? null
-                              : () {
+                        FutButton(
+                          text: 'Crear liga',
+                          loadingText: 'Creando...',
+                          loading: loading,
+                          onPressed: () {
                             context.read<LeaguesBloc>().add(
                               CreateLeagueRequested(nameCtrl.text),
                             );
                           },
-                          child: Text(loading ? 'Creando...' : 'Crear liga',style: TextStyle(color: Colors.white),),
                         ),
 
                         const SizedBox(height: 32),
@@ -120,34 +106,22 @@ class LeagueSelectionScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         TextField(
                           controller: codeCtrl,
-                          decoration: InputDecoration(
-                            hintText: 'Código de invitación',
-                            filled: true,
-                            fillColor: const Color(0xFFF4F6FA),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          decoration:
+                              customInputDecoration('Código de invitación'),
                         ),
                         const SizedBox(height: 16),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            minimumSize: const Size.fromHeight(48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                              side: BorderSide(color: primaryColor, width: 1),
-                            ),
-                          ),
-                          onPressed: loading
-                              ? null
-                              : () {
+                        FutButton(
+                          text: 'Unirse a liga',
+                          loadingText: 'Uniendo...',
+                          loading: loading,
+                          color: Colors.white,
+                          borderColor: AppColors.primary,
+                          textColor: AppColors.primary,
+                          onPressed: () {
                             context.read<LeaguesBloc>().add(
                               JoinLeagueRequested(codeCtrl.text),
                             );
                           },
-                          child: Text(loading ? 'Uniendo...' : 'Unirse a liga',style: TextStyle(color: primaryColor),),
                         ),
 
 
