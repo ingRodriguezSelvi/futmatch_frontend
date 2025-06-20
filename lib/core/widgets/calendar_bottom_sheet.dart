@@ -5,13 +5,11 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../features/matches/domain/entities/day_availability.dart';
 
 class CalendarBottomSheet extends StatefulWidget {
-  final void Function(DateTime) onDateSelected;
   final List<DayAvailability>? availableDays;
   final bool allowPastDates;
 
   const CalendarBottomSheet({
     super.key,
-    required this.onDateSelected,
     this.availableDays,
     this.allowPastDates = false,
   });
@@ -70,14 +68,12 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
             const SizedBox(height: 16),
             FutButton(
               text: "Seleccionar",
-              onPressed:
-                  _selectedDay == null
-                      ? null
-                      : () {
-                        print('Selected day: $_selectedDay');
-                        widget.onDateSelected(_selectedDay!);
-                        Navigator.of(context).pop();
-                      },
+              onPressed: _selectedDay == null
+                  ? null
+                  : () {
+                      print('Selected day: $_selectedDay');
+                      Navigator.of(context).pop<DateTime>(_selectedDay!);
+                    },
             ),
             /*
             ElevatedButton(
