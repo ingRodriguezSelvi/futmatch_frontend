@@ -156,6 +156,7 @@ class _DatePickerPrwState extends State<DatePickerPrw> {
   }
 
   void _setDate(DateTime date) {
+    print("Selected date: $date");
     setState(() {
       _selectedDate = date;
     });

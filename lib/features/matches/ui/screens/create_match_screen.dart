@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:futmatch_frontend/core/widgets/fut_button.dart';
 
 import '../../../../core/styles/input_decoration.dart';
 import '../../../../core/widgets/date_picker_prw.dart';
@@ -83,28 +84,31 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         labelText: 'Fecha',
                         hintText: 'Selecciona la fecha',
                         showTime: true,
-                        onChanged: (d) => _selectedDate = d,
+                        onChanged: (d) {
+                          setState(() {
+                            print("Selected date: $d");
+                            _selectedDate = d;
+                          });
+                        },
                         validator: (_) => null,
                       ),
                       const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed:
-                            loading
-                                ? null
-                                : () {
-                                  context.read<MatchesBloc>().add(
-                                    CreateMatchRequested({
-                                      'homeTeam': _homeCtrl.text,
-                                      'awayTeam': _awayCtrl.text,
-                                      'location': _locationCtrl.text,
-                                      'date':
-                                          _selectedDate?.toIso8601String() ??
-                                          '',
-                                    }),
-                                  );
-                                },
-                        child: Text(loading ? 'Creando...' : 'Crear'),
-                      ),
+                      FutButton(
+                        onPressed: loading
+                            ? null
+                            : () {
+                                context.read<MatchesBloc>().add(
+                                  CreateMatchRequested({
+                                    'homeTeam': _homeCtrl.text,
+                                    'awayTeam': _awayCtrl.text,
+                                    'location': _locationCtrl.text,
+                                    'date':
+                                        _selectedDate?.toIso8601String() ?? '',
+                                  }),
+                                );
+                              },
+                        text: loading ? 'Creando...' : 'Crear partido',
+                      )
                     ],
                   );
                 },

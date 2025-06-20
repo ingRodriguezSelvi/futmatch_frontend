@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:futmatch_frontend/core/widgets/fut_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../features/matches/domain/entities/day_availability.dart';
@@ -30,10 +31,12 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
       return false;
     }
     if (widget.availableDays == null) return true;
-    return widget.availableDays!.any((d) =>
-        d.date.year == day.year &&
-        d.date.month == day.month &&
-        d.date.day == day.day);
+    return widget.availableDays!.any(
+      (d) =>
+          d.date.year == day.year &&
+          d.date.month == day.month &&
+          d.date.day == day.day,
+    );
   }
 
   @override
@@ -48,10 +51,12 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
               firstDay: DateTime.utc(2000, 1, 1),
               lastDay: DateTime.utc(2100, 12, 31),
               focusedDay: _focusedDay,
-              selectedDayPredicate: (day) => _selectedDay != null &&
-                  day.year == _selectedDay!.year &&
-                  day.month == _selectedDay!.month &&
-                  day.day == _selectedDay!.day,
+              selectedDayPredicate:
+                  (day) =>
+                      _selectedDay != null &&
+                      day.year == _selectedDay!.year &&
+                      day.month == _selectedDay!.month &&
+                      day.day == _selectedDay!.day,
               onDaySelected: (selected, focused) {
                 if (_isDayEnabled(selected)) {
                   setState(() {
@@ -63,20 +68,31 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
               enabledDayPredicate: _isDayEnabled,
             ),
             const SizedBox(height: 16),
+            FutButton(
+              text: "Seleccionar",
+              onPressed:
+                  _selectedDay == null
+                      ? null
+                      : () {
+                        print('Selected day: $_selectedDay');
+                        widget.onDateSelected(_selectedDay!);
+                        Navigator.of(context).pop();
+                      },
+            ),
+            /*
             ElevatedButton(
               onPressed: _selectedDay == null
                   ? null
                   : () {
+                print('Selected day: $_selectedDay');
                       widget.onDateSelected(_selectedDay!);
                       Navigator.of(context).pop();
                     },
               child: const Text('Seleccionar'),
-            ),
+            ),*/
           ],
         ),
       ),
     );
   }
 }
-
-
