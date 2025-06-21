@@ -8,10 +8,10 @@ import '../../../../core/widgets/fut_button.dart';
 import '../../../auth/data/datasources/auth_local_datasource.dart';
 import '../../../fields/domain/entities/field.dart';
 import '../../../fields/domain/usecases/get_fields.dart';
-import '../../../players/domain/usecases/get_current_player.dart';
 import '../blocs/matches_bloc/matches_bloc.dart';
 import '../../../leagues/ui/blocs/leagues_bloc/leagues_bloc.dart';
 import '../widgets/date_time_picker_bottom_sheet.dart';
+import 'dart:convert';
 
 class CreateMatchContent extends StatefulWidget {
   const CreateMatchContent({super.key});
@@ -26,7 +26,7 @@ class _CreateMatchContentState extends State<CreateMatchContent> {
   final List<Field> _fields = [];
   Field? _selectedField;
   int _teamSize = 5;
-  String? _playerId;
+  String? _userId;
   DateTime? _selectedDate;
 
   @override
@@ -39,16 +39,20 @@ class _CreateMatchContentState extends State<CreateMatchContent> {
     final local = sl<AuthLocalDataSource>();
     final tokens = await local.getTokens();
     if (tokens == null) return;
+    final parts = tokens.accessToken.split('.');
+    if (parts.length == 3) {
+      final payload = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+      final decoded = jsonDecode(payload) as Map<String, dynamic>;
+      _userId = decoded['sub'] as String?;
+    }
 
     try {
       final fields = await sl<GetFields>()();
-      final player = await sl<GetCurrentPlayer>()();
       setState(() {
         _fields
           ..clear()
           ..addAll(fields);
         if (_fields.isNotEmpty) _selectedField = _fields.first;
-        _playerId = player.id;
       });
     } catch (_) {
       // Ignorar error de carga inicial
@@ -149,7 +153,7 @@ class _CreateMatchContentState extends State<CreateMatchContent> {
 
                           if (leagueId == null ||
                               _selectedField == null ||
-                              _playerId == null) {
+                              _userId == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content:
@@ -164,7 +168,7 @@ class _CreateMatchContentState extends State<CreateMatchContent> {
                               'leagueId': leagueId,
                               'fieldId': _selectedField!.id,
                               'teamSize': _teamSize,
-                              'createdBy': _playerId!,
+                              'createdBy': _userId!,
                               'scheduledAt': _selectedDate
                                   ?.toIso8601String() ??
                                   '',
