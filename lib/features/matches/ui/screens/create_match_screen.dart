@@ -15,9 +15,9 @@ class CreateMatchScreen extends StatefulWidget {
 }
 
 class _CreateMatchScreenState extends State<CreateMatchScreen> {
-  final _homeCtrl = TextEditingController();
-  final _awayCtrl = TextEditingController();
-  final _locationCtrl = TextEditingController();
+  final _fieldCtrl = TextEditingController();
+  final _teamSizeCtrl = TextEditingController();
+  final _createdByCtrl = TextEditingController();
   final _dateCtrl = TextEditingController();
   DateTime? _selectedDate;
 
@@ -68,18 +68,19 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                   return Column(
                     children: [
                       TextField(
-                        controller: _homeCtrl,
-                        decoration: customInputDecoration('Equipo local'),
+                        controller: _fieldCtrl,
+                        decoration: customInputDecoration('Campo'),
                       ),
                       const SizedBox(height: 12),
                       TextField(
-                        controller: _awayCtrl,
-                        decoration: customInputDecoration('Equipo visitante'),
+                        controller: _teamSizeCtrl,
+                        decoration: customInputDecoration('Tamaño del equipo'),
+                        keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 12),
                       TextField(
-                        controller: _locationCtrl,
-                        decoration: customInputDecoration('Ubicación'),
+                        controller: _createdByCtrl,
+                        decoration: customInputDecoration('Creado por'),
                       ),
                       const SizedBox(height: 12),
                       TextField(
@@ -108,10 +109,10 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                             : () {
                                 context.read<MatchesBloc>().add(
                                   CreateMatchRequested({
-                                    'homeTeam': _homeCtrl.text,
-                                    'awayTeam': _awayCtrl.text,
-                                    'location': _locationCtrl.text,
-                                    'date':
+                                    'fieldId': _fieldCtrl.text,
+                                    'teamSize': _teamSizeCtrl.text,
+                                    'createdBy': _createdByCtrl.text,
+                                    'scheduledAt':
                                         _selectedDate?.toIso8601String() ?? '',
                                   }),
                                 );

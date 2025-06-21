@@ -64,7 +64,7 @@ Future<void> init() async {
         () => TokenRefresher(repository: sl<AuthRepository>(), localDataSource: sl<AuthLocalDataSource>()),
   );
   sl.registerLazySingleton<MatchesRepository>(
-      () => MatchesRepositoryImpl(sl()),
+      () => MatchesRepositoryImpl(sl(),sl()),
   );
   sl.registerLazySingleton<LeaguesRepository>(
       () => LeaguesRepositoryImpl(sl()),
