@@ -1,27 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../../../core/di.dart';
 import '../../../../core/styles/input_decoration.dart';
 import '../../../auth/data/datasources/auth_local_datasource.dart';
 import '../../../leagues/ui/blocs/leagues_bloc/leagues_bloc.dart';
-import '../../data/datasources/matches_remote_datasource.dart';
+import '../../../fields/domain/entities/field.dart';
+import '../../../fields/domain/usecases/get_fields.dart';
+import '../../../players/domain/usecases/get_current_player.dart';
 import '../blocs/matches_bloc/matches_bloc.dart';
 import '../widgets/date_time_picker_bottom_sheet.dart';
-
-class _Field {
-  final String id;
-  final String name;
-  _Field({required this.id, required this.name});
-
-  factory _Field.fromJson(Map<String, dynamic> json) {
-    return _Field(id: json['id'], name: json['name']);
-  }
-}
 
 class CreateMatchScreen extends StatefulWidget {
   CreateMatchScreen({super.key});
@@ -33,8 +22,8 @@ class CreateMatchScreen extends StatefulWidget {
 class _CreateMatchScreenState extends State<CreateMatchScreen> {
   final _dateCtrl = TextEditingController();
 
-  final List<_Field> _fields = [];
-  _Field? _selectedField;
+  final List<Field> _fields = [];
+  Field? _selectedField;
   int _teamSize = 5;
   String? _playerId;
   DateTime? _selectedDate;
@@ -47,45 +36,24 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
 
   Future<void> _loadInitialData() async {
     final local = sl<AuthLocalDataSource>();
-    final client = sl<http.Client>();
-    final baseUrl = sl<MatchesRemoteDataSource>().baseUrl;
     final tokens = await local.getTokens();
     if (tokens == null) return;
-    final userId = _extractUserIdFromToken(tokens.accessToken);
 
-    final fieldsRes = await client.get(
-      Uri.parse('$baseUrl/fields'),
-      headers: {'Authorization': 'Bearer ${tokens.accessToken}'},
-    );
-    if (fieldsRes.statusCode == 200) {
-      final data = jsonDecode(fieldsRes.body) as List<dynamic>;
+    try {
+      final fields = await sl<GetFields>()();
+      final player = await sl<GetCurrentPlayer>()();
       setState(() {
         _fields
           ..clear()
-          ..addAll(data.map((e) => _Field.fromJson(e)));
+          ..addAll(fields);
         if (_fields.isNotEmpty) _selectedField = _fields.first;
+        _playerId = player.id;
       });
-    }
-
-    final playerRes = await client.get(
-      Uri.parse('$baseUrl/users/$userId/player'),
-      headers: {'Authorization': 'Bearer ${tokens.accessToken}'},
-    );
-    if (playerRes.statusCode == 200) {
-      final data = jsonDecode(playerRes.body) as Map<String, dynamic>;
-      setState(() {
-        _playerId = data['id'] as String?;
-      });
+    } catch (_) {
+      // ignore errors in initial load
     }
   }
 
-  String _extractUserIdFromToken(String token) {
-    final parts = token.split('.');
-    if (parts.length != 3) throw Exception('Token inválido');
-    final payload = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
-    final decoded = jsonDecode(payload) as Map<String, dynamic>;
-    return decoded['sub'] as String;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +101,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                   final loading = state is MatchesLoading;
                   return Column(
                     children: [
-                      DropdownButtonFormField<_Field>(
+                      DropdownButtonFormField<Field>(
                         value: _selectedField,
                         items: [
                           for (final f in _fields)
