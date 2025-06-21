@@ -26,6 +26,14 @@ import '../features/matches/domain/usecases/cancel_participation.dart';
 import '../features/matches/domain/usecases/update_match_result.dart';
 import '../features/matches/ui/blocs/matches_bloc/matches_bloc.dart';
 import 'network/token_refresher.dart';
+import '../features/fields/data/datasources/fields_remote_datasource.dart';
+import '../features/fields/data/repositories/fields_repository_impl.dart';
+import '../features/fields/domain/repositories/fields_repository.dart';
+import '../features/fields/domain/usecases/get_fields.dart';
+import '../features/players/data/datasources/players_remote_datasource.dart';
+import '../features/players/data/repositories/players_repository_impl.dart';
+import '../features/players/domain/repositories/players_repository.dart';
+import '../features/players/domain/usecases/get_current_player.dart';
 
 final sl = GetIt.instance;
 
@@ -52,6 +60,18 @@ Future<void> init() async {
       baseUrl: baseUrl,
     ),
   );
+  sl.registerLazySingleton<FieldsRemoteDataSource>(
+    () => FieldsRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: baseUrl,
+    ),
+  );
+  sl.registerLazySingleton<PlayersRemoteDataSource>(
+    () => PlayersRemoteDataSourceImpl(
+      client: sl(),
+      baseUrl: baseUrl,
+    ),
+  );
   sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource());
 
   // Repository
@@ -69,6 +89,12 @@ Future<void> init() async {
   sl.registerLazySingleton<LeaguesRepository>(
       () => LeaguesRepositoryImpl(sl()),
   );
+  sl.registerLazySingleton<FieldsRepository>(
+      () => FieldsRepositoryImpl(sl(), sl()),
+  );
+  sl.registerLazySingleton<PlayersRepository>(
+      () => PlayersRepositoryImpl(sl(), sl()),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => LoginUser(sl()));
@@ -80,6 +106,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetLeaguesForUser(sl()));
   sl.registerLazySingleton(() => CreateLeague(sl()));
   sl.registerLazySingleton(() => JoinLeague(sl()));
+  sl.registerLazySingleton(() => GetFields(sl()));
+  sl.registerLazySingleton(() => GetCurrentPlayer(sl()));
 
   // Blocs
   sl.registerFactory(() => AuthBloc(loginUser: sl<LoginUser>()));
