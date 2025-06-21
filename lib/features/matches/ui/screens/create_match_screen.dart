@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:futmatch_frontend/core/widgets/fut_button.dart';
 
 import '../../../../core/styles/input_decoration.dart';
 import '../blocs/matches_bloc/matches_bloc.dart';
+import '../widgets/date_time_picker_bottom_sheet.dart';
 
 class CreateMatchScreen extends StatefulWidget {
   CreateMatchScreen({super.key});
@@ -16,6 +18,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   final _homeCtrl = TextEditingController();
   final _awayCtrl = TextEditingController();
   final _locationCtrl = TextEditingController();
+  final _dateCtrl = TextEditingController();
   DateTime? _selectedDate;
 
   @override
@@ -77,6 +80,25 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                       TextField(
                         controller: _locationCtrl,
                         decoration: customInputDecoration('Ubicación'),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _dateCtrl,
+                        readOnly: true,
+                        decoration: customInputDecoration('Fecha y hora'),
+                        onTap: () async {
+                          final date = await showDateTimePickerBottomSheet(
+                            context,
+                            initialDate: _selectedDate,
+                          );
+                          if (date != null) {
+                            setState(() {
+                              _selectedDate = date;
+                              _dateCtrl.text =
+                                  DateFormat('yyyy-MM-dd HH:mm').format(date);
+                            });
+                          }
+                        },
                       ),
                       const SizedBox(height: 12),
                       const SizedBox(height: 24),
