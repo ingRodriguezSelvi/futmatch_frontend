@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:futmatch_frontend/core/widgets/fut_button.dart';
 
 import '../../../../core/styles/input_decoration.dart';
-import '../../../../core/widgets/date_picker_prw.dart';
 import '../blocs/matches_bloc/matches_bloc.dart';
 
 class CreateMatchScreen extends StatefulWidget {
@@ -80,18 +79,6 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         decoration: customInputDecoration('Ubicación'),
                       ),
                       const SizedBox(height: 12),
-                      DatePickerPrw(
-                        labelText: 'Fecha',
-                        hintText: 'Selecciona la fecha',
-                        showTime: true,
-                        onChanged: (d) {
-                          setState(() {
-                            print("Selected date: $d");
-                            _selectedDate = d;
-                          });
-                        },
-                        validator: (_) => null,
-                      ),
                       const SizedBox(height: 24),
                       FutButton(
                         onPressed: loading
